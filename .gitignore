@@ -1,0 +1,6 @@
+# Ignore service account JSON files
+*.json
+
+# Ignore specific service account JSON file
+vast-cogency-432503-i4-5d47cd667ca9.json
+
