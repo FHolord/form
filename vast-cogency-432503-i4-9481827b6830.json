@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "vast-cogency-432503-i4",
+  "private_key_id": "9481827b6830942fc3a45e4bff4890bfdf98070a",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCl2cK6mjajmiy0\nWfKbWZejssoixZtbLhgcKJgOBzhfJjhXDNfB8YZrTdAOnYh+wTUeQMetTBFRmw/R\nTWvsNqWzUpiLsgqNeWME8arYtQgHOVRGAZ+KQxQmoxCZZ6nVQi3eU6Q9JT38pspN\nsqzsT0W9ehWgkp8hAYtHeUCrM77CZ0fUuB7RVrIkoto8izlnc05qTrL8o7KjByYJ\ntxMGNFg+mhu2VwOpQO5hBbHKK/A2Smf/IYAUxkLxk2jwKKl+smo9ciw0xRihhqoz\nThh/DhK7g1UCkPOehHXdS8cJH8nZryJwvKzacC7PA6CF0kRzS9RqYhQIg6jtpOTh\ntEndmetzAgMBAAECggEASF1tQYVzTMxDMEhE+rLLXwJuf2CQimbg3zx5KDnPR3kC\nQT1Z0QZlG+HeY9opygDcgABM/9j+f4h0jONGsVEg2M8zv1RmlVc/NNOLs7W9tIU3\nt7oSlj3xh3BEGGNqb6JKKEV/lqxu0RQnlmJdYFiwed3QnPkM1NZ7IqsN5AWWePTq\neQbY9S9+Su6krURPR8vX5BqhZ7DG2kWv8aBiT2fYOuo2hA1lY+u6ebDdItfz0wLQ\nDclqPasX4R1s3ZgDUnfKGDlpqNYxhEl3vOhQo4eEkQoYFCmwTC1kcrUzquJ79nQJ\nPnvsQNazvgDzbxTHb9ViWw9nGW3hDvpcc2vdTsgURQKBgQDCJwsQrGQJ0I5IYyzf\noh6DeCKxPyLDrOonOwHxnCw+XaLdI6ssLwyU07fjM1d5FRI7+BCZvQrdw/oU+LDK\n1CK3IN6zrm983mhL5nzfjXHKX7F3LxJty/APvWbAVjtzd0b3qQzYScEDO/aQRVR8\nA0WqHM2sFkyFISw4DZYBJRectQKBgQDarrmceF8t7lz0LwaaTJfBZg6KKfO8IiQe\nm7YeznIMOC+FK22GL6t0SOQEcNpSv09EzFRHuzRJ7fCULZGr6RRuxd3xXyoMDrjm\nps6RT3d12HjtYPVk0g8JmsG+4slGiN3eJrqm17alEP4SuhvLLjYxiFv2vmvPzbZH\nEWUhu0IohwKBgQCyOGLI4GZIOCCTxC4J7uhxqFK4P4tq8YxTjLABGGnoqc15j2du\nfJXg++P99EAkjroZQGIEreqOnXovzAWFemuPjOXBLKt8hTBaE+6my1EcAvGFxTj2\nftETsbnjboTOPjxv1MdMt48sp9tynaGq4NoPCLencyS0xDmyDo6W6HSfTQKBgQCC\nzvVUNWSpsuWDYwXOEnbMRuH3n3SeWsXEUVw1PURXLtyuCfYvyCAFJPzP8zmFOc6O\n1rKrXb2/Y0b/O+rhLED+qflCwqwCHmRYA/uYTDKnGV/sjoz7S/OWyS2Po1TGjmQ4\n2G3aEzq7rlhsl0q81N2x72EjTXBsEx8vj6Yw8TR3zQKBgEL2ofJ5OYR04h1w+6Vv\n7VicbZhOTbMfw08IPFAFOZyJv30dp2Cd9yJNCVkld32IKSX56bhcx+YB6Shl0JpZ\nCBW2xhmXXIGZ6hNKgxHtx+Jd//6b/tSZKzEmKV5++naTeDMDvHNDHwW7NtMUqjmI\nrig3SSxrjS6ke8X/dIEr0VTW\n-----END PRIVATE KEY-----\n",
+  "client_email": "pythonapi@vast-cogency-432503-i4.iam.gserviceaccount.com",
+  "client_id": "110991641829127589028",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/pythonapi%40vast-cogency-432503-i4.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
