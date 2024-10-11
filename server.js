@@ -1,6 +1,8 @@
+require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const { google } = require('googleapis');
+const { GoogleAuth } = require('google-auth-library');
 const path = require('path');
 
 const app = express();
@@ -10,11 +12,23 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-const credentials = require('./vast-cogency-432503-i4-4d5ba262cb94.json');
+// const credentials = require('./vast-cogency-432503-i4-4d5ba262cb94.json');
 
-const auth = new google.auth.GoogleAuth({
-    credentials,
-    scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+// const auth = new google.auth.GoogleAuth({
+//     credentials,
+//     scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+// });
+
+const auth = new GoogleAuth({
+  projectId: process.env.GOOGLE_PROJECT_ID,
+  credentials: {
+    private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+    client_email: process.env.GOOGLE_CLIENT_EMAIL,
+  },
+  scopes: [
+    'https://www.googleapis.com/auth/spreadsheets',
+    'https://www.googleapis.com/auth/drive',
+  ],
 });
 
 const spreadsheetId = '1fFo9UKr7IGE4Qscy35fo-lnNsYQj9o481uQjfF1ZPHM';

@@ -4,3 +4,5 @@
 # Ignore specific service account JSON file
 vast-cogency-432503-i4-5d47cd667ca9.json
 
+# Ignore environment variable file
+.env
