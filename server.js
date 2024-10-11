@@ -10,7 +10,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-const credentials = require('./vast-cogency-432503-i4-9481827b6830.json');
+const credentials = require('./vast-cogency-432503-i4-5d47cd667ca9.json');
 
 const auth = new google.auth.GoogleAuth({
     credentials,
