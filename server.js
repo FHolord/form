@@ -10,7 +10,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-const credentials = require('./vast-cogency-432503-i4-177e728d6021.json');
+const credentials = require('./vast-cogency-432503-i4-9481827b6830.json');
 
 const auth = new google.auth.GoogleAuth({
     credentials,
@@ -71,24 +71,25 @@ async function updateGoogleSheet(formData) {
 }
 
 app.post('/submit-form', async (req, res) => {
-    const formData = req.body; // Extract form data correctly
-    console.log(`Received form data: ${JSON.stringify(formData)}`);
+  const coffeeType = req.body.coffeeType;
+  console.log(`Received form data: ${JSON.stringify({ coffeeType })}`);
 
-    if (!formData || !formData.coffeeType) {
-        console.error('Invalid form data received:', formData);
-        return res.status(400).json({ success: false, message: 'Invalid form data.' });
-    }
+  if (!coffeeType) {
+      console.error('Invalid form data received:', { coffeeType });
+      return res.status(400).json({ success: false, message: 'Invalid form data.' });
+  }
 
-    const formId = await updateGoogleSheet(formData);
+  const formId = await updateGoogleSheet({ coffeeType });
 
-    if (formId === null) {
-        console.error('Failed to generate Form ID');
-        return res.status(500).json({ success: false, message: 'Failed to generate Form ID.' });
-    }
+  if (formId === null) {
+      console.error('Failed to generate Form ID');
+      return res.status(500).json({ success: false, message: 'Failed to generate Form ID.' });
+  }
 
-    console.log('Form submitted successfully with ID:', formId);
-    res.json({ success: true, formId });
+  console.log('Form submitted successfully with ID:', formId);
+  res.json({ success: true, formId });
 });
+
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
