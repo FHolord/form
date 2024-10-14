@@ -27,7 +27,6 @@ const auth = new GoogleAuth({
   },
   scopes: [
     'https://www.googleapis.com/auth/spreadsheets',
-    'https://www.googleapis.com/auth/drive',
   ],
 });
 
@@ -54,7 +53,7 @@ async function updateGoogleSheet(formData) {
         });
 
         const formIds = response.data.values ? response.data.values.flat()
-            .map(value => Number(value.replace(/^A/, ''))) // Remove 'A' for number conversion
+            .map(value => Number(value.replace(/^O/, ''))) 
             .filter(value => !isNaN(value)) : [];
 
         let nextFormId = 1;
@@ -65,7 +64,7 @@ async function updateGoogleSheet(formData) {
         }
 
         const timestamp = new Date().toLocaleString('en-SG', { timeZone: 'Asia/Singapore' });
-        const newRow = [[`A${nextFormId}`, formData.coffeeType, timestamp]]; // Add timestamp to the new row
+        const newRow = [[`O${nextFormId}`, formData.coffeeType, timestamp]]; // Add timestamp to the new row
         const appendRange = 'Giselle!A:C'; // Update range to include the timestamp
 
         await sheets.spreadsheets.values.append({
