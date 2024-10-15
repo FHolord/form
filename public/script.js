@@ -1,10 +1,17 @@
 document.getElementById('coffeeForm').addEventListener('submit', async function (e) {
     e.preventDefault();
 
-    const coffeeType = document.getElementById('coffeeType').value;
+    // Get the selected coffee type from the radio buttons
+    const coffeeType = document.querySelector('input[name="coffeeType"]:checked');
     const responseMessage = document.getElementById('responseMessage');
     const submitButton = document.querySelector('button[type="submit"]');
     responseMessage.innerHTML = '';
+
+    // Check if a coffee type is selected
+    if (!coffeeType) {
+        responseMessage.innerHTML = 'Please select a coffee type.';
+        return;
+    }
 
     // Disable the submit button to prevent multiple submissions
     submitButton.disabled = true;
@@ -15,7 +22,7 @@ document.getElementById('coffeeForm').addEventListener('submit', async function 
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ coffeeType }) 
+            body: JSON.stringify({ coffeeType: coffeeType.value }) // Send the selected coffee type value
         });
 
         const result = await response.json();
