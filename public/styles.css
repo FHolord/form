@@ -21,12 +21,15 @@ h1 {
 label {
     display: block;
     margin: 10px 0 5px;
+    font-weight: bold; /* Make labels bold for emphasis */
 }
 
-input {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
+input[type="radio"] {
+    margin-right: 10px; /* Space between radio button and label */
+}
+
+input[type="radio"] + label {
+    display: inline-block; /* Keep labels inline with radio buttons */
 }
 
 button {

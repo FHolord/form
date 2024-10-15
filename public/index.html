@@ -10,8 +10,28 @@
     <div class="container">
         <h1>Coffee Order Form</h1>
         <form id="coffeeForm">
-            <label for="coffeeType">Coffee Type:</label>
-            <input type="text" id="coffeeType" name="coffeeType" required>
+            <label>Coffee Type:</label><br>
+            <input type="radio" id="americano" name="coffeeType" value="Americano" required>
+            <label for="americano">Americano</label><br>
+
+            <input type="radio" id="espresso" name="coffeeType" value="Espresso" required>
+            <label for="espresso">Espresso</label><br>
+
+            <input type="radio" id="mocha" name="coffeeType" value="Mocha" required>
+            <label for="mocha">Mocha</label><br>
+
+            <input type="radio" id="flatWhite" name="coffeeType" value="Flat White" required>
+            <label for="flatWhite">Flat White</label><br>
+
+            <input type="radio" id="hotChocolate" name="coffeeType" value="Hot Chocolate" required>
+            <label for="hotChocolate">Hot Chocolate</label><br>
+
+            <input type="radio" id="earlGrey" name="coffeeType" value="Earl Grey Tea" required>
+            <label for="earlGrey">Earl Grey Tea</label><br>
+
+            <input type="radio" id="englishBreakfast" name="coffeeType" value="English Breakfast Tea" required>
+            <label for="englishBreakfast">English Breakfast Tea</label><br><br>
+
             <button type="submit">Submit</button>
         </form>
         <div id="responseMessage"></div>
