@@ -25,12 +25,24 @@ const auth = new GoogleAuth({
 
 const spreadsheetId = '1fFo9UKr7IGE4Qscy35fo-lnNsYQj9o481uQjfF1ZPHM';
 
-// Function to update the "Giselle" sheet with form data
+// Global mutex lock to prevent concurrent submissions from causing issues
+let isLocked = false;
+
 async function updateGoogleSheet(formData) {
   const sheets = google.sheets({ version: 'v4', auth });
   const range = 'Giselle!A2:A';
 
+  // Wait until the lock is released
+  while (isLocked) {
+    console.log('Waiting for lock to be released...');
+    await new Promise(resolve => setTimeout(resolve, 100)); // Wait 100ms before retrying
+  }
+
+  // Acquire the lock
+  isLocked = true;
+
   try {
+    // Fetch existing form IDs
     const response = await sheets.spreadsheets.values.get({
       spreadsheetId,
       range,
@@ -44,10 +56,12 @@ async function updateGoogleSheet(formData) {
 
     let nextFormId = numericIds.length === 0 ? 1 : Math.max(...numericIds) + 1;
 
+    // Create the new row with a unique Form ID
     const timestamp = new Date().toLocaleString('en-SG', { timeZone: 'Asia/Singapore' });
     const newRow = [[`O${nextFormId}`, formData.coffeeType, timestamp]];
     const appendRange = 'Giselle!A:C';
 
+    // Append the new row to the sheet
     await sheets.spreadsheets.values.append({
       spreadsheetId,
       range: appendRange,
@@ -55,8 +69,13 @@ async function updateGoogleSheet(formData) {
       requestBody: { values: newRow },
     });
 
+    // Release the lock after completion
+    isLocked = false;
+
     return `O${nextFormId}`;
   } catch (error) {
+    // Release the lock in case of an error
+    isLocked = false;
     console.error('Error updating Google Sheet:', error);
     return null;
   }
@@ -64,7 +83,7 @@ async function updateGoogleSheet(formData) {
 
 async function checkAndCombineSheetsData() {
     const sheets = google.sheets({ version: 'v4', auth });
-  
+
     try {
       // Fetch data from "peepee" sheet
       const peepeeData = await sheets.spreadsheets.values.get({
@@ -72,7 +91,7 @@ async function checkAndCombineSheetsData() {
         range: 'peepee!A2:C', // Adjust range if necessary
       });
       const peepeeRows = peepeeData.data.values || [];
-  
+
       // Logic to determine if there are new records
       if (peepeeRows.length > 0) {
         await combineSheetsData(); // Call the combineSheetsData function
@@ -113,11 +132,10 @@ app.post('/submit-form', async (req, res, next) => {
 // Route to manually trigger combineSheetsData
 app.get('/combine', combineSheetsData, (req, res) => {
     res.send('Combined data processed successfully');
-  });
-  
-  // Check and combine sheets data every 30 seconds
-  setInterval(checkAndCombineSheetsData, 30000);
-  
+});
+
+// Check and combine sheets data every 30 seconds
+setInterval(checkAndCombineSheetsData, 30000);
 
 // Start server
 app.listen(PORT, () => {
