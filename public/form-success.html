@@ -10,14 +10,17 @@
     <div class="container">
         <h1>Form Submission Successful</h1>
         <p id="formIdMessage"></p>
-        <p><a href="index.html" id="backtoform" class="button"  target="_blank">Order a new drink</a></p>
+        <p id="beverage"></p>
+        <p><a href="/" id="backtoform" class="button" target="_blank">Order a new drink</a></p>
     </div>
 
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         const formId = urlParams.get('formId');
+        const coffeeType = urlParams.get('coffeeType'); // Get coffeeType from the URL
 
         document.getElementById('formIdMessage').innerHTML = `Your Form ID is: ${formId}`;
+        document.getElementById('beverage').innerHTML = `Your drink is ${coffeeType}`;
     </script>
 </body>
 </html>
