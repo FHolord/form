@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -7,20 +7,21 @@
     <title>Form Success</title>
 </head>
 <body>
-    <div class="container">
-        <h1>Form Submission Successful</h1>
+    <div class="receipt">
         <p id="formIdMessage"></p>
         <p id="beverage"></p>
-        <p><a href="/" id="backtoform" class="button" target="_blank">Order a new drink</a></p>
+        <img src="./receipt.png" alt="Receipt" />
+        <p><a href="/" class="button">Order a new drink</a></p>
     </div>
-
     <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        const formId = urlParams.get('formId');
-        const coffeeType = urlParams.get('coffeeType'); // Get coffeeType from the URL
+        const formId = sessionStorage.getItem('formId');
+        const coffeeType = sessionStorage.getItem('coffeeType');
 
-        document.getElementById('formIdMessage').innerHTML = `Your Form ID is: ${formId}`;
-        document.getElementById('beverage').innerHTML = `Your drink is ${coffeeType}`;
+        document.getElementById('formIdMessage').innerText = `Your Form ID is: ${formId}`;
+        document.getElementById('beverage').innerText = `Your drink is: ${coffeeType}`;
+
+        sessionStorage.removeItem('formId');
+        sessionStorage.removeItem('coffeeType');
     </script>
 </body>
-</html>
+</html> -->

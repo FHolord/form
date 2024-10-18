@@ -1,17 +1,36 @@
+@font-face {
+    font-family: 'SWISA03';
+    src: url('SWISA03.TTF') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'SWISA04';
+    src: url('SWISA04.TTF') format('truetype');
+    font-weight: bold;
+    font-style: normal; 
+}
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    margin: 0;
-    padding: 20px;
+    font-family: 'SWISA03', sans-serif;
+    display: flex; /* Use Flexbox */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    height: 100vh; /* Make the body take full viewport height */
+    margin: 0; /* Remove default margin */
 }
 
 .container {
-    max-width: 600px;
-    margin: auto;
+    width: 100%; /* Allow it to scale down on smaller screens */
     background: white;
     padding: 20px;
+    margin: 20px;
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.container-submit {
+    margin: auto;
 }
 
 h1 {
@@ -33,20 +52,37 @@ input[type="radio"] + label {
 }
 
 button {
+    font-family: 'SWISA04', sans-serif; 
+    font-weight: bold;
     width: 100%;
     padding: 10px;
-    background: #007bff;
+    background: #005952;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
 }
 
+
 button:hover {
-    background: #0056b3;
+    background: #83ca9e;
 }
 
 #responseMessage {
     margin-top: 20px;
     text-align: center;
+}
+.receipt {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+}
+
+.receipt-image {
+    z-index: 1; 
+}
+
+img {
+    max-width: 100%; 
+    height: auto; 
 }
