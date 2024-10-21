@@ -47,7 +47,7 @@ document.getElementById('coffeeForm').addEventListener('submit', async function 
 
     // Display "submitting" message
     responseMessage.innerHTML = 'Form is submitting...';
-    responseMessage.style.color = 'blue'; // Make it visually distinct
+    responseMessage.style.color = '#005952'; 
 
     // Disable the submit button to prevent multiple submissions
     submitButton.disabled = true;

@@ -145,6 +145,12 @@ async function checkAndCombineSheetsData() {
   }
 }
 
+// Automatically check and combine data from "peepee" sheet every 30 seconds
+setInterval(() => {
+  console.log('Checking for new records in the peepee sheet...');
+  checkAndCombineSheetsData();
+}, 30000); // 30000ms = 30 seconds
+
 // Route for the success page
 app.get('/form-success', (req, res) => {
   const formId = req.session.formId;

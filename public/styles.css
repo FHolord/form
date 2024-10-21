@@ -45,6 +45,7 @@ label {
 
 input[type="radio"] {
     margin-right: 10px; /* Space between radio button and label */
+    accent-color: #005952;
 }
 
 input[type="radio"] + label {
