@@ -25,27 +25,27 @@ function parseDateString(dateString) {
   return finalDate;
 }
 
-// Middleware function to combine and sort data from Giselle and peepee sheets
+// Middleware function to combine and sort data from Online and Box sheets
 async function combineSheetsData(req, res, next) {
   const sheets = google.sheets({ version: 'v4', auth });
 
   try {
-    // Fetch data from "Giselle" sheet
-    const giselleData = await sheets.spreadsheets.values.get({
+    // Fetch data from "Online" sheet
+    const OnlineData = await sheets.spreadsheets.values.get({
       spreadsheetId,
-      range: 'Giselle!A2:C', // Adjust range if necessary
+      range: 'Online!A2:C', // Adjust range if necessary
     });
-    const giselleRows = giselleData.data.values || [];
+    const OnlineRows = OnlineData.data.values || [];
 
-    // Fetch data from "peepee" sheet
-    const peepeeData = await sheets.spreadsheets.values.get({
+    // Fetch data from "Box" sheet
+    const BoxData = await sheets.spreadsheets.values.get({
       spreadsheetId,
-      range: 'peepee!A2:C', // Adjust range if necessary
+      range: 'Box!A2:C', // Adjust range if necessary
     });
-    const peepeeRows = peepeeData.data.values || [];
+    const BoxRows = BoxData.data.values || [];
 
     // Combine the data from both sheets
-    const combinedRows = [...giselleRows, ...peepeeRows];
+    const combinedRows = [...OnlineRows, ...BoxRows];
 
     // Sort the combined data based on the timestamp (column C, index 2)
     const sortedRows = combinedRows.sort((a, b) => {

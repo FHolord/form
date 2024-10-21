@@ -39,7 +39,7 @@ let isLocked = false;
 
 async function updateGoogleSheet(formData) {
   const sheets = google.sheets({ version: 'v4', auth });
-  const range = 'Giselle!A2:A';
+  const range = 'Online!A2:A';
 
   // Wait until the lock is released
   while (isLocked) {
@@ -68,7 +68,7 @@ async function updateGoogleSheet(formData) {
     // Create the new row with a unique Form ID
     const timestamp = new Date().toLocaleString('en-SG', { timeZone: 'Asia/Singapore' });
     const newRow = [[`O${nextFormId}`, formData.coffeeType, timestamp]];
-    const appendRange = 'Giselle!A:C';
+    const appendRange = 'Online!A:C';
 
     // Append the new row to the sheet
     await sheets.spreadsheets.values.append({
@@ -89,6 +89,60 @@ async function updateGoogleSheet(formData) {
     return null;
   }
 }
+// Global variable to track last combined records
+let lastCombinedRecords = new Set();
+
+// Function to check if there are new records in the "Box" sheet and trigger combineSheetsData
+async function checkAndCombineSheetsData() {
+  const sheets = google.sheets({ version: 'v4', auth });
+
+  try {
+    // Fetch data from "Box" sheet
+    const BoxData = await sheets.spreadsheets.values.get({
+      spreadsheetId,
+      range: 'Box!A2:C', // Adjust range if necessary
+    });
+    const BoxRows = BoxData.data.values || []; // Default to empty array if no data
+
+    // Log the data for debugging
+    console.log('Fetched data from Box sheet:', BoxRows);
+
+    // Only combine if there are new records
+    if (BoxRows.length > 0) {
+      let newRecordsFound = false;
+
+      BoxRows.forEach((row) => {
+        // Ensure each row has the expected number of columns (A, B, C)
+        if (row && row.length >= 3) {
+          const [columnA, columnB, columnC] = row;
+
+          // Check that columnA or any column that uses split is defined and a string
+          if (typeof columnA === 'string' && !lastCombinedRecords.has(columnA)) {
+            // Mark this record as processed
+            lastCombinedRecords.add(columnA);
+            newRecordsFound = true;
+
+            // Perform any other actions you need with the row data here...
+            console.log(`Processing new record: ${columnA}`);
+          }
+        } else {
+          console.log('Invalid or missing data', row);
+        }
+      });
+
+      if (newRecordsFound) {
+        console.log("New records found in Box sheet, combining data...");
+        await combineSheetsData(); // Call the combineSheetsData function
+      } else {
+        console.log("No new records to combine.");
+      }
+    } else {
+      console.log("No new records found in Box sheet.");
+    }
+  } catch (error) {
+    console.error('Error checking for new records in Box sheet:', error);
+  }
+}
 
 // Route for submitting form data
 app.post('/submit-form', async (req, res) => {
@@ -100,7 +154,7 @@ app.post('/submit-form', async (req, res) => {
     return res.status(400).json({ success: false, message: 'Invalid form data.' });
   }
 
-  // Step 1: Update the "Giselle" sheet with form data
+  // Step 1: Update the "Online" sheet with form data
   const formId = await updateGoogleSheet({ coffeeType });
 
   if (formId === null) {
@@ -114,42 +168,12 @@ app.post('/submit-form', async (req, res) => {
   req.session.formId = formId;
   req.session.coffeeType = coffeeType;
 
-  // Step 3: Trigger combineSheetsData middleware to combine data
-  await combineSheetsData(req, res, async () => {
-    console.log('Sheets combined successfully after form submission.');
+  // Step 3: Check and combine sheets data after form submission
+  await checkAndCombineSheetsData();
 
-    // Step 4: Return success response
-    res.json({ success: true });
-  });
+  // Step 4: Return success response
+  res.json({ success: true });
 });
-
-// Function to check if there are new records in the "peepee" sheet and trigger combineSheetsData
-async function checkAndCombineSheetsData() {
-  const sheets = google.sheets({ version: 'v4', auth });
-
-  try {
-    // Fetch data from "peepee" sheet
-    const peepeeData = await sheets.spreadsheets.values.get({
-      spreadsheetId,
-      range: 'peepee!A2:C', // Adjust range if necessary
-    });
-    const peepeeRows = peepeeData.data.values || [];
-
-    // Logic to determine if there are new records
-    if (peepeeRows.length > 0) {
-      console.log("New records found in peepee sheet, combining data...");
-      await combineSheetsData(); // Call the combineSheetsData function
-    }
-  } catch (error) {
-    console.error('Error checking for new records in peepee sheet:', error);
-  }
-}
-
-// Automatically check and combine data from "peepee" sheet every 30 seconds
-setInterval(() => {
-  console.log('Checking for new records in the peepee sheet...');
-  checkAndCombineSheetsData();
-}, 30000); // 30000ms = 30 seconds
 
 // Route for the success page
 app.get('/form-success', (req, res) => {
@@ -168,61 +192,58 @@ app.get('/form-success', (req, res) => {
   // Render the success page with the session data
   res.send(`
     <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
-    <title>Form Success</title>
-    <style>
-    body {
-      background-color: #005952;
-    }
-
-    .receipt-container {
-        position: relative;
-        display: inline-block;
-        max-width: 100%;
-    }
-
-    .receipt-container img {
-        width: 100%; /* Ensure image is responsive */
-        height: auto;
-    }
-
-    .overlay {
-        width: 100%;
-        position: absolute;
-        color: black;
-        padding: 2% 4%; /* Use percentages for padding */
-        border-radius: 5px;
-        font-weight: bold;
-        left: 50%; /* Horizontally center */
-        top: 69%; /* Vertically center */
-        transform: translate(-50%, -50%); /* Center based on top/left */
-        text-align: center;
-    }
-
-    .queue-number, .coffee {
-        margin-top: 2em; /* Spacing between the order and queue number */
-        font-size: 7vw; /* Relative to the viewport width */
-    }
-</style
-</head>
-<body>
-    <div class="container-submit">
-        <div class="receipt-container">
-            <img id="receiptImg" src="./receipt.png" alt="Receipt" />
-            <div id="orderText" class="overlay">
-                <div class="coffee">${coffeeType}</div>
-                <div class="queue-number">${formId}</div>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="styles.css">
+        <title>Form Success</title>
+        <style>
+        body {
+          background-color: #005952;
+        }
+        .receipt-container {
+            position: relative;
+            display: inline-block;
+            max-width: 100%;
+        }
+        .receipt-container img {
+            width: 100%; /* Ensure image is responsive */
+            height: auto;
+        }
+        .overlay {
+            width: 100%;
+            position: absolute;
+            color: black;
+            padding: 2% 4%; /* Use percentages for padding */
+            border-radius: 5px;
+            font-weight: bold;
+            left: 50%; /* Horizontally center */
+            top: 69%; /* Vertically center */
+            transform: translate(-50%, -50%); /* Center based on top/left */
+            text-align: center;
+        }
+        .queue-number, .coffee {
+            margin-top: 2em; /* Spacing between the order and queue number */
+            font-size: 7vw; /* Relative to the viewport width */
+        }
+        </style>
+    </head>
+    <body>
+        <div class="container-submit">
+            <div class="receipt-container">
+                <img id="receiptImg" src="./receipt.png" alt="Receipt" />
+                <div id="orderText" class="overlay">
+                    <div class="coffee">${coffeeType}</div>
+                    <div class="queue-number">${formId}</div>
+                </div>
             </div>
         </div>
-    </div>
-</body>
-</html>
+    </body>
+    </html>
   `);
 });
+
 // Start server
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
