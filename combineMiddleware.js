@@ -19,7 +19,7 @@ function parseDateString(dateString) {
   const [time, modifier] = timePart.split(' ');
 
   const [hours, minutes, seconds] = time.split(':').map(Number);
-  const adjustedHours = modifier.toLowerCase() === 'pm' && hours < 12 ? hours + 12 : hours;
+  const adjustedHours = modifier.toLowerCase() === 'PM' && hours < 12 ? hours + 12 : hours;
   const finalDate = new Date(year, month - 1, day, adjustedHours, minutes, seconds);
   
   return finalDate;
