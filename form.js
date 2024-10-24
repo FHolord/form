@@ -19,57 +19,58 @@ const spreadsheetId = '1fFo9UKr7IGE4Qscy35fo-lnNsYQj9o481uQjfF1ZPHM';
 let isLocked = false;
 
 async function updateGoogleSheet(formData) {
-  const sheets = google.sheets({ version: 'v4', auth });
-  const range = 'Online!A2:A';
-
-  // Wait until the lock is released
-  while (isLocked) {
-    console.log('Waiting for lock to be released...');
-    await new Promise(resolve => setTimeout(resolve, 100)); // Wait 100ms before retrying
+    const sheets = google.sheets({ version: 'v4', auth });
+    const range = 'Online!A2:A';
+  
+    // Wait until the lock is released
+    while (isLocked) {
+      console.log('Waiting for lock to be released...');
+      await new Promise(resolve => setTimeout(resolve, 100)); // Wait 100ms before retrying
+    }
+  
+    // Acquire the lock
+    isLocked = true;
+  
+    try {
+      // Fetch existing form IDs
+      const response = await sheets.spreadsheets.values.get({
+        spreadsheetId,
+        range,
+      });
+  
+      const formIds = response.data.values ? response.data.values.flat() : [];
+      const numericIds = formIds
+        .map(value => Number(value)) // Parse IDs directly as numbers
+        .filter(value => !isNaN(value));
+  
+      // Start from 1001 if there are no existing IDs
+      let nextFormId = numericIds.length === 0 ? 1001 : Math.max(...numericIds) + 1;
+  
+      // Create the new row with a unique Form ID
+      const timestamp = new Date().toLocaleString('en-SG', { timeZone: 'Asia/Singapore' });
+      const newRow = [[nextFormId, formData.coffeeType, timestamp]]; // No 'O' prefix
+      const appendRange = 'Online!A:C';
+  
+      // Append the new row to the sheet
+      await sheets.spreadsheets.values.append({
+        spreadsheetId,
+        range: appendRange,
+        valueInputOption: 'RAW',
+        requestBody: { values: newRow },
+      });
+  
+      // Release the lock after completion
+      isLocked = false;
+  
+      return nextFormId; // Return just the ID without 'O'
+    } catch (error) {
+      // Release the lock in case of an error
+      isLocked = false;
+      console.error('Error updating Google Sheet:', error);
+      return null;
+    }
   }
-
-  // Acquire the lock
-  isLocked = true;
-
-  try {
-    // Fetch existing form IDs
-    const response = await sheets.spreadsheets.values.get({
-      spreadsheetId,
-      range,
-    });
-
-    const formIds = response.data.values ? response.data.values.flat() : [];
-    const numericIds = formIds
-      .filter(value => value.startsWith('O'))
-      .map(value => Number(value.replace('O', '')))
-      .filter(value => !isNaN(value));
-
-    let nextFormId = numericIds.length === 0 ? 1 : Math.max(...numericIds) + 1;
-
-    // Create the new row with a unique Form ID
-    const timestamp = new Date().toLocaleString('en-SG', { timeZone: 'Asia/Singapore' });
-    const newRow = [[`O${nextFormId}`, formData.coffeeType, timestamp]];
-    const appendRange = 'Online!A:C';
-
-    // Append the new row to the sheet
-    await sheets.spreadsheets.values.append({
-      spreadsheetId,
-      range: appendRange,
-      valueInputOption: 'RAW',
-      requestBody: { values: newRow },
-    });
-
-    // Release the lock after completion
-    isLocked = false;
-
-    return `O${nextFormId}`;
-  } catch (error) {
-    // Release the lock in case of an error
-    isLocked = false;
-    console.error('Error updating Google Sheet:', error);
-    return null;
-  }
-}
+  
 
 // Route handler for form submission
 async function handleFormSubmission(req, res, combineSheetsData) {
